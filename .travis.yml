@@ -1,0 +1,35 @@
+sudo: false
+
+language: objective-c
+env:
+  matrix:
+    - VERSION=2.7.11
+    - VERSION=3.3.5
+    - VERSION=3.4.4
+    - VERSION=3.5.1
+
+install:
+  - source terryfy/travis_tools.sh
+  - get_python_environment macpython $VERSION venv
+  - pip install -U wheel pytest hypothesis
+  - cd marisa-trie
+  - python setup.py bdist_wheel
+  - rename_wheels dist
+  - pip install dist/*.whl
+  - cd ..
+
+script:
+  - mkdir tmp_for_test
+  - cp -r marisa-trie/tests tmp_for_test/
+  - cd tmp_for_test
+  - python -c "import pytest; pytest.main()" -s -v .
+  - cd ..
+
+deploy:
+  provider: s3
+  region: "eu-west-1"
+  access_key_id: "$ARTIFACTS_KEY"
+  secret_access_key: "$ARTIFACTS_SECRET"
+  bucket: "$ARTIFACTS_BUCKET"
+  skip_cleanup: true
+  local_dir: marisa-trie/dist
