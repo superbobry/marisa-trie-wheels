@@ -11,7 +11,8 @@ env:
 install:
   - source terryfy/travis_tools.sh
   - get_python_environment macpython $VERSION venv
-  - pip install -U wheel pytest hypothesis
+  - pip install -U wheel pytest
+  - checkout_closest_tag marisa-trie
   - cd marisa-trie
   - python setup.py bdist_wheel
   - rename_wheels dist
