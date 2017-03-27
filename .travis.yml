@@ -22,10 +22,6 @@ matrix:
     - os: osx
       language: generic
       env:
-        - MB_PYTHON_VERSION=2.6
-    - os: osx
-      language: generic
-      env:
         - MB_PYTHON_VERSION=2.7
     - os: osx
       language: generic
