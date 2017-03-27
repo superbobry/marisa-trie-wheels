@@ -10,5 +10,5 @@ function pre_build {
 function run_tests {
     # Runs tests on installed distribution from an empty directory
     python --version
-    python setup.py test
+    python -m pytest ../marisa-trie/tests/
 }

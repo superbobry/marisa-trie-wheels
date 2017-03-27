@@ -2,6 +2,8 @@ env:
   global:
       - REPO_DIR="marisa-trie"
       - BUILD_COMMIT=0.7.4
+      - BUILD_DEPENDS=""
+      - TEST_DEPENDS="pytest hypothesis==2.0.0"
       - PLAT=x86_64
       - UNICODE_WIDTH=32
 
@@ -35,8 +37,6 @@ matrix:
         - MB_PYTHON_VERSION=3.6
 
 before_install:
-    - BUILD_DEPENDS=""
-    - TEST_DEPENDS=""
     - source multibuild/common_utils.sh
     - source multibuild/travis_steps.sh
     - before_install
@@ -56,4 +56,4 @@ deploy:
   secret_access_key: "$ARTIFACTS_SECRET"
   bucket: "$ARTIFACTS_BUCKET"
   skip_cleanup: true
-  local_dir: marisa-trie/dist
+  local_dir: wheelhouse/
