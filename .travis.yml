@@ -58,10 +58,9 @@ script:
     - install_run $PLAT
 
 deploy:
-  provider: s3
-  region: "eu-west-1"
-  access_key_id: "$ARTIFACTS_KEY"
-  secret_access_key: "$ARTIFACTS_SECRET"
-  bucket: "$ARTIFACTS_BUCKET"
-  skip_cleanup: true
-  local_dir: wheelhouse/
+  provider: releases
+  api_key:
+    secure: gLATMibFS1A+Mk/bj9l5hA8Dm7jxpWHhg6R3Y1PNIjCt/RpE2IzWi0J4jLjIjaASuRwoG5PqsB0fk3/op3vFJCvhEDh/nOxqo5N5cenWJDaVWdIOljHIO3loA8qbl08oWgjJuFmyZgPgazgYbXNcKsAi1LOiudwAqV2fQ4BBb6N8h+n0iQw9S3IpJ7wo+pySZI61slrfbHlC0W+O+rqQ3jdohzC6R3DPCCZBhZoB7f5PFnAYjdVdbtEp2qQyndEIhBigPzA6vbQY5wh7XxZh6wDi7jXiwTcqeoUxJ1oMdlVGnqvuVL2Q9iOC+sMWAMvpMBY+JDw7frNPKBgf7eqLo3aJsgmHUshR7OsjWwIQZGz5EvBTEGeTBHQLAosdv7w2tj7UeGm6ppdUc1HScpX8/qAzFIP2KL0ieBdo7w2fsg3yiG7mRRuRGeFj+laqPKmNbRczperBRR+EgW/vZpMyfKaunYGVPSQmSsrZBma5zYtI6sfITzXB0Knjchs313olhdQqFvNalZfkEzOPH7WjCE5ajCP9ogMuXMDjYTk8EmxAKTe52LgX8X4jJI6C28wmUkBCBAyNZMr1xASswzEIOwbgMzUXAThQTumswggUgx+XPv85mzYwIPBFgwa7cQr2vQvY46DtO0zKXFwdjSBAx0+uLPRWznJFCs1jMDlbjdE=
+  file: "*.whl"
+  on:
+    repo: superbobry/marisa-trie-wheels
