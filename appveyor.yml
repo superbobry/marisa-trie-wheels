@@ -1,0 +1,52 @@
+environment:
+  global:
+    BUILD_COMMIT: master
+
+  matrix:
+    - PYTHON: C:\Python27
+    - PYTHON: C:\Python27-x64
+    - PYTHON: C:\Python35
+    - PYTHON: C:\Python35-x64
+    - PYTHON: C:\Python36
+    - PYTHON: C:\Python36-x64
+
+clone_script:
+  - git clone -q --branch=%APPVEYOR_REPO_BRANCH% https://github.com/%APPVEYOR_REPO_NAME%.git %APPVEYOR_BUILD_FOLDER%
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - git checkout -qf %APPVEYOR_REPO_COMMIT%
+  - git submodule update --init --recursive
+
+install:
+  # Prepend newly installed Python to the PATH of this build (this cannot be
+  # done from inside the powershell script as it would require to restart
+  # the parent CMD process).
+  - SET PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
+  - python -m pip install -U pip
+
+  # Fix MSVC builds for 64-bit Python. See:
+  # http://stackoverflow.com/questions/32091593/cannot-install-windows-sdk-7-1-on-windows-10
+  - echo "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64 > "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64/vcvars64.bat"
+
+  # Install the dependencies of the project.
+  - pip install %NP_BUILD_DEP% Cython
+  # Pin wheel to 0.26 to avoid Windows ABI tag for built wheel
+  - pip install wheel==0.26
+  # Build wheel
+  - cd marisa-trie
+  - git submodule update --init
+  - git checkout %BUILD_COMMIT%
+  - python setup.py bdist_wheel
+  - cd ..
+
+artifacts:
+  # Archive the generated wheel package in the ci.appveyor.com build report.
+  - path: marisa-trie\dist\*
+
+deploy:
+  provider: GitHub
+  description: ''
+  force_update: true
+  auth_token:
+    secure: '0Jd1ume1p+3pw/L8hl3A96KUeZIff+X9Xk2IG4Jm7yS/NApMrDr2/FQKdEq1ZVif'
+  on:
+    appveyor_repo_tag: true
